@@ -18,9 +18,22 @@ Tạo file `.env.local` từ `.env.example`:
 ```bash
 TELEGRAM_BOT_TOKEN=your_bot_token
 TELEGRAM_CHAT_ID=your_chat_id
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
 Không commit `.env.local` lên git.
+
+## Cấu hình SEO
+
+Website dùng `NEXT_PUBLIC_SITE_URL` để tạo canonical URL, Open Graph URL, `sitemap.xml`, `robots.txt` và JSON-LD. Khi deploy public, hãy set biến này trên Vercel bằng domain chính thức, ví dụ:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://ten-domain-cua-quan.vn
+```
+
+Nếu chưa có domain chính thức, có thể dùng domain Vercel tạm thời. Không để fallback `http://localhost:3000` cho bản production.
+
+Ảnh chia sẻ mạng xã hội đang dùng `public/products/menu-4-mon.jpg`. Nên chuẩn bị ảnh OG riêng kích thước khoảng 1200x630 tại `public/og-image.jpg` rồi cập nhật `ogImagePath` trong `src/lib/site.ts` nếu muốn ảnh preview đẹp hơn trên Facebook, Zalo và Messenger.
 
 ## Sửa menu
 
@@ -62,9 +75,10 @@ Trong Vercel project, vào **Settings** -> **Environment Variables** và thêm:
 ```bash
 TELEGRAM_BOT_TOKEN=
 TELEGRAM_CHAT_ID=
+NEXT_PUBLIC_SITE_URL=
 ```
 
-Dán giá trị thật vào Vercel, không đưa token vào code, README, commit hoặc biến `NEXT_PUBLIC_*`.
+Dán giá trị thật vào Vercel. `TELEGRAM_BOT_TOKEN` và `TELEGRAM_CHAT_ID` là biến server-side, không đưa token vào code, README, commit hoặc biến `NEXT_PUBLIC_*`. `NEXT_PUBLIC_SITE_URL` là URL public của website, không chứa secret.
 
 ### 4. Deploy và test
 

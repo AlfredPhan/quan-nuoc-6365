@@ -1,9 +1,44 @@
 import type { Metadata } from "next";
+import { getSiteUrl, siteConfig } from "@/lib/site";
 import "./globals.css";
 
+const siteUrl = getSiteUrl();
+const ogImageUrl = `${siteUrl}${siteConfig.ogImagePath}`;
+
 export const metadata: Metadata = {
-  title: "6365 Trà & Nước | Order nhanh",
-  description: "Đặt trà và nước nhanh tại 6365 Trà & Nước.",
+  metadataBase: new URL(siteUrl),
+  title: siteConfig.title,
+  description: siteConfig.description,
+  keywords: siteConfig.keywords,
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: siteConfig.title,
+    description: siteConfig.description,
+    url: siteUrl,
+    siteName: siteConfig.name,
+    type: "website",
+    locale: "vi_VN",
+    images: [
+      {
+        url: ogImageUrl,
+        width: 1200,
+        height: 630,
+        alt: "Menu đồ uống 6365 Trà & Nước",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.title,
+    description: siteConfig.description,
+    images: [ogImageUrl],
+  },
 };
 
 export default function RootLayout({

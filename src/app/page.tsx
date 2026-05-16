@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { FormEvent, useMemo, useState } from "react";
 import { DrinkSize, formatVnd, menuItems } from "@/lib/menu";
+import { getSiteUrl, siteConfig } from "@/lib/site";
 
 type Language = "vi" | "en";
 type ReceiveMethod = "pickup" | "delivery";
@@ -24,22 +25,39 @@ type CustomerLocation = {
 
 const receiveMethods: ReceiveMethod[] = ["pickup", "delivery"];
 const pickupTimes: PickupTime[] = ["now", "10m", "15m", "30m", "custom"];
-const shopMapUrl = "https://maps.app.goo.gl/SZUeCcsw93atpNrf8";
-const shopPhone = "0372899505";
+const siteUrl = getSiteUrl();
+const shopMapUrl = siteConfig.mapUrl;
+const shopPhone = siteConfig.phone;
 const socialLinks = [
   {
     label: "Facebook",
-    href: "https://www.facebook.com/profile.php?id=61573331165041",
+    href: siteConfig.facebookUrl,
   },
   {
     label: "Instagram",
-    href: "https://www.instagram.com/tiemnuocnho6365/",
+    href: siteConfig.instagramUrl,
   },
   {
     label: "Zalo",
     href: `https://zalo.me/${shopPhone}`,
   },
 ];
+const localBusinessJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FoodEstablishment",
+  name: siteConfig.name,
+  url: siteUrl,
+  telephone: shopPhone,
+  image: `${siteUrl}${siteConfig.ogImagePath}`,
+  servesCuisine: ["Trà", "Sữa", "Nước trái cây"],
+  sameAs: [
+    siteConfig.facebookUrl,
+    siteConfig.instagramUrl,
+    `https://zalo.me/${shopPhone}`,
+  ],
+  hasMap: shopMapUrl,
+  // TODO: Thêm address dạng PostalAddress khi có địa chỉ text đầy đủ của quán.
+};
 
 const copy = {
   vi: {
@@ -576,11 +594,20 @@ export default function Home() {
   }
 
   return (
-    <main
-      className={`min-h-screen pb-24 md:pb-0 ${
-        isDark ? "bg-[#17140f] text-[#f7efe1]" : "bg-[#fbf6ec] text-[#2f251c]"
-      }`}
-    >
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(localBusinessJsonLd).replace(/</g, "\\u003c"),
+        }}
+      />
+      <main
+        className={`min-h-screen pb-24 md:pb-0 ${
+          isDark
+            ? "bg-[#17140f] text-[#f7efe1]"
+            : "bg-[#fbf6ec] text-[#2f251c]"
+        }`}
+      >
       {addMessage ? (
         <div
           className={`fixed left-1/2 top-4 z-50 w-[calc(100%-32px)] max-w-sm -translate-x-1/2 rounded-2xl px-4 py-3 text-sm font-bold shadow-lg ${
@@ -1314,6 +1341,7 @@ export default function Home() {
           </span>
         </a>
       ) : null}
-    </main>
+      </main>
+    </>
   );
 }
