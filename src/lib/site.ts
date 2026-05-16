@@ -1,4 +1,4 @@
-const fallbackSiteUrl = "http://localhost:3000";
+const fallbackSiteUrl = "https://6365-tea-water.vercel.app";
 
 export function getSiteUrl() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL?.trim() || fallbackSiteUrl;
